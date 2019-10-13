@@ -1,0 +1,30 @@
+#ifndef WHEELIE_CONFIG
+#define WHEELIE_CONFIG
+
+#include <Energia.h>
+#include <msp430f5529.h>
+
+#define LEFT_MOT_ENCODER_A P2_6
+#define LEFT_MOT_EAP P2IN
+#define LEFT_MOT_EAB BIT6
+
+#define LEFT_MOT_ENCODER_B P2_3
+#define LEFT_MOT_EBP P2IN
+#define LEFT_MOT_EBB BIT3
+
+#define LEFT_MOT_DRIVE_A P1_3
+#define LEFT_MOT_DRIVE_B P1_2
+
+
+#define RIGHT_MOT_ENCODER_A P2_0
+#define RIGHT_MOT_EAP P2IN
+#define RIGHT_MOT_EAB BIT0
+
+#define RIGHT_MOT_ENCODER_B P2_2
+#define RIGHT_MOT_EBP P2IN
+#define RIGHT_MOT_EBB BIT2
+
+#define RIGHT_MOT_DRIVE_A P1_5
+#define RIGHT_MOT_DRIVE_B P1_4
+
+#endif
