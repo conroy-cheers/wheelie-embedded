@@ -51,8 +51,19 @@ Direction _parse_right_encoder() {
   }
 }
 
-static int _left_ticks = 0;
-static int _right_ticks = 0;
+int _get_encoder_tick(Direction dir) {
+  switch (dir) {
+    case REVERSE:
+      return -1;
+    case FORWARD:
+      return +1;
+    default:
+      return 0;
+  }
+}
+
+volatile static int _left_ticks = 0;
+volatile static int _right_ticks = 0;
 
 void encoders_left_mot_handler_a() {
   _encoders_left_a_set = left_encoder_a();
@@ -80,7 +91,7 @@ void encoders_right_mot_handler_a() {
   _encoders_right_a_set = right_encoder_a();
   _encoders_right_b_set = right_encoder_b();
 
-  _right_ticks += _parse_right_encoder();
+  _right_ticks += _get_encoder_tick(_parse_right_encoder());
 
   _encoders_right_a_prev = _encoders_right_a_set;
   _encoders_right_b_prev = _encoders_right_b_set;
@@ -90,21 +101,19 @@ void encoders_right_mot_handler_b() {
   _encoders_right_a_set = right_encoder_a();
   _encoders_right_b_set = right_encoder_b();
 
-  _right_ticks += _parse_right_encoder();
+  _right_ticks += _get_encoder_tick(_parse_right_encoder());
 
   _encoders_right_a_prev = _encoders_right_a_set;
   _encoders_right_b_prev = _encoders_right_b_set;
 }
 
-static int _left_speed;
-static int _right_speed;
+volatile static int _left_speed;
+volatile static int _right_speed;
 
 #pragma vector = TIMER0_A0_VECTOR
 __interrupt void CCR0_ISR(void) {
   // Timer A0 Interrupt service routine
-  _right_speed += 1;
-  return;
-  _right_speed = 100000 / _right_ticks;
+  _right_speed = _right_ticks;
   _right_ticks = 0;
 }
 
@@ -125,9 +134,9 @@ void encoders_setup_interrupts() {
   attachInterrupt(RIGHT_MOT_ENCODER_B, *encoders_right_mot_handler_b, CHANGE);
 
   // Attach timer interrupt
-  TA0CCR0 = 10000;
   TA0CCTL0 |= CCIE;
-  TA0CTL |= MC_1 + TASSEL_2 + TACLR;
+  TA0CTL |= MC_1 + TASSEL_1 + ID__8 + TACLR;  // TASSEL_1 selects ACLK (32kHz). /8 divider makes for 4kHz.
+  TA0CCR0 = 64;  // count up to 64 -> 62.5Hz frequency
 }
 
 Direction get_left_direction() {
