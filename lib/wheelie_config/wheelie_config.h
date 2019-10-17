@@ -1,8 +1,10 @@
 #ifndef WHEELIE_CONFIG
 #define WHEELIE_CONFIG
 
-#include <Energia.h>
-#include <msp430f5529.h>
+enum Direction {
+    FORWARD,
+    REVERSE
+};
 
 #define LEFT_MOT_ENCODER_A P2_6
 #define LEFT_MOT_EAP P2IN

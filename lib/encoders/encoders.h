@@ -1,13 +1,7 @@
 #ifndef WHEELIE_ENCODERS
 #define WHEELIE_ENCODERS
 
-#include <Energia.h>
 #include "wheelie_config.h"
-
-enum Direction {
-    FORWARD,
-    REVERSE
-};
 
 volatile static bool _encoders_left_a_set;
 volatile static bool _encoders_left_b_set;
